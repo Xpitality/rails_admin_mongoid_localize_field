@@ -4,10 +4,11 @@
     %li{ class: ( 'active' if locale == I18n.locale ) }
       %a{ href: "##{locale}_#{uuid}", data: { toggle: "tab" }, class: uuid }= locale
 .tab-content
+  - translations = field.bindings[:object].safe_send(field.translations_field)
   = form.fields_for field.translations_field do |localized_field|
     - I18n.available_locales.each do |locale|
       .fields.tab-pane{ style: 'padding:5px; margin: 0;', id: "#{locale}_#{uuid}", class: [( 'active' if locale == I18n.locale ), uuid] }
-        = localized_field.send field_type, locale, html_attributes.reverse_merge({ :value => field.value.try(:[], locale.to_s) })
+        = localized_field.send field_type, locale, html_attributes.reverse_merge({ :value => translations.try(:[], locale.to_s) })
 
 :javascript
   var #{field.name}#{field.object_id} = (new Date().getTime()) + Math.floor(Math.random()*100000);
